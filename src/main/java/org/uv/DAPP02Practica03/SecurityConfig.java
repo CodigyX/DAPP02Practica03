@@ -20,23 +20,25 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
     @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable().authorizeHttpRequests(
+                        (authorize) -> {
+                    authorize.anyRequest().authenticated();
+                }
+        ).httpBasic(Customizer.withDefaults());
+        return http.build();
+    }
+    
+    @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-    @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeHttpRequests((authorize) -> {
-            authorize.anyRequest().authenticated();
-        }).httpBasic(Customizer.withDefaults());
-        
-        return http.build();
     }
     @Bean
     public UserDetailsService userDetailsService() {
 
         UserDetails admin = User.builder().username("admin").
                 password(passwordEncoder().encode("admin")).
-                roles("ADMIN")
+                roles("ADMIN","SPERVIDOR","EMPLEADO")
                 .build();
 
         return new InMemoryUserDetailsManager(admin);

@@ -1,5 +1,6 @@
+org\uv\DAPP02Practica03\SecurityConfig.class
+org\uv\DAPP02Practica03\ControllerEmpleado.class
 org\uv\DAPP02Practica03\ServletInitializer.class
 org\uv\DAPP02Practica03\Dapp02Practica03Application.class
 org\uv\DAPP02Practica03\Empleado.class
-org\uv\DAPP02Practica03\ControllerEmpleado.class
 org\uv\DAPP02Practica03\RepositoryEmpleado.class

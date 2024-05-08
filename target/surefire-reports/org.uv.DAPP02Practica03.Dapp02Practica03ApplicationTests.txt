@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: org.uv.DAPP02Practica03.Dapp02Practica03ApplicationTests
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 83.413 s - in org.uv.DAPP02Practica03.Dapp02Practica03ApplicationTests
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 59.622 s - in org.uv.DAPP02Practica03.Dapp02Practica03ApplicationTests
