@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,54 +28,58 @@ public class ControllerEmpleado {
     @GetMapping()
     public List<Empleado> list() {
         List<Empleado> lstEmpleado = repositoryEmpleado.findAll();
-        return lstEmpleado;
+        if (!lstEmpleado.isEmpty()) {
+            return lstEmpleado;
+        } else {
+            return null;
+        }
     }
 
     @GetMapping("/{id}")
-    public Empleado get(@PathVariable Long id) {
-        Optional<Empleado> optEmp = repositoryEmpleado.findById(id);
-        if (optEmp.isPresent()) {
-            return optEmp.get();
+    public Object get(@PathVariable Long id) {
+        Optional<Empleado> optEmpleado = repositoryEmpleado.findById(id);
+        if (optEmpleado.isPresent()) {
+            return ResponseEntity.ok().body(optEmpleado);
         } else {
             return null;
         }
     }
 
     @PutMapping("/{id}")
-    public Empleado updateEmpleado(@PathVariable Long id, @RequestBody Empleado empleadoActualizado) {
-
-        Optional<Empleado> repEmpleado = repositoryEmpleado.findById(id);
-
-        if (repEmpleado.isPresent()) {
-            Empleado empleadoExistente = repEmpleado.get();
-
-            // Actualizar campos del empleado existente
-            empleadoExistente.setNombre(empleadoActualizado.getNombre());
-            empleadoExistente.setDireccion(empleadoActualizado.getDireccion());
-            empleadoExistente.setTelefono(empleadoActualizado.getTelefono());
-
-            Empleado empleadoGuardado = repositoryEmpleado.saveAndFlush(empleadoExistente);
-            return empleadoGuardado;  // Devuelve el empleado actualizado
+    public ResponseEntity<Empleado> put(@PathVariable Long id, @RequestBody Empleado empleado) {
+        Optional<Empleado> dataEmpleado = repositoryEmpleado.findById(id);
+        if (dataEmpleado.isPresent()) {
+            Empleado emp = dataEmpleado.get();
+            emp.setNombre(empleado.getNombre());
+            emp.setDireccion(empleado.getDireccion());
+            emp.setTelefono(empleado.getTelefono());
+            repositoryEmpleado.save(emp);
+            return ResponseEntity.ok().body(emp);
         } else {
-            // Si no se encuentra el empleado, puede devolver null o lanzar un error HTTP
             return null;
         }
     }
 
     @PostMapping
-    public Empleado createEmpleado(@RequestBody Empleado nuevoEmpleado) {
-        // Guarda y escribe el empleado inmediatamente en la base de datos
-        Empleado empleadoGuardado = repositoryEmpleado.saveAndFlush(nuevoEmpleado);
-        return empleadoGuardado;  // Devuelve el empleado recién creado
+    public ResponseEntity<Empleado> post(@RequestBody Empleado empleado) {
+        try {
+            Empleado savedEmpleado = repositoryEmpleado.save(empleado);
+            return ResponseEntity.ok().body(savedEmpleado);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public Empleado delete(@PathVariable Long id) {
-        Optional<Empleado> repEmpleado = repositoryEmpleado.findById(id);
-
-        if (repEmpleado.isPresent()) {
-            repositoryEmpleado.deleteById(id);
-            return repEmpleado.get();
+    public ResponseEntity<Empleado> delete(@PathVariable Long id) {
+        Optional<Empleado> optEmpleado = repositoryEmpleado.findById(id);
+        if (optEmpleado.isPresent()) {
+            try {
+                repositoryEmpleado.deleteById(id);
+                return ResponseEntity.ok().build();
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
         } else {
             return null;
         }

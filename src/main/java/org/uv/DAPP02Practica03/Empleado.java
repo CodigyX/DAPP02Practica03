@@ -20,10 +20,10 @@ import javax.persistence.Table;
 @Table(name = "empleado")
 public class Empleado {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "empleado_clave_seq")
-    @SequenceGenerator(name = "empleado_clave_seq",sequenceName = "empleado_clave_seq", 
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "empleado_id_seq")
+    @SequenceGenerator(name = "empleado_id_seq",sequenceName = "empleado_id_seq", 
             initialValue = 1,allocationSize = 1)
-    @Column(name = "clave")
+    @Column(name = "id")
     private Long id;
  
     @Column(name = "nombre")
